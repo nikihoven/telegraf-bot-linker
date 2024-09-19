@@ -16,6 +16,7 @@ services:
       dockerfile: dev.Dockerfile
     environment:
       PORT: ${PORT}
+      BOT_TOKEN: ${BOT_TOKEN}
     depends_on:
       - db
     volumes:
