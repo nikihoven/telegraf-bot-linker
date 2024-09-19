@@ -19,7 +19,7 @@ services:
     depends_on:
       - db
     volumes:
-      - .:/app
+      - .:/usr/src/app
     ports:
       - "3017:3017"
     command: ["npm", "run", "start:dev"]
