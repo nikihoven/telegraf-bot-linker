@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  bot:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    environment:
+      PORT: ${PORT}
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    ports:
+      - "3017:3017"
+    command: ["npm", "run", "start:dev"]
+
+volumes:
+  db_data:
