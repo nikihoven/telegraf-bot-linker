@@ -7,9 +7,20 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model User {
+  telegramId BigInt   @id
+  username   String?
+  createdAt  DateTime @default(now())
+
+  links Link[]
+}
+
 model Link {
-  id   Int    @id @default(autoincrement())
-  url  String
-  name String
-  code String @unique
+  code      String   @id @unique
+  userId    BigInt
+  url       String
+  name      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [telegramId])
 }
