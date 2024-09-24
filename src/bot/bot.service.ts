@@ -66,4 +66,28 @@ export class BotService {
       void ctx.reply('Usage: /savelink <name> <url>');
     }
   }
+
+  @Command('mylinks')
+  @UseGuards(UserExistenceGuard)
+  async getLinks(@Ctx() ctx: Context) {
+    const telegramId = ctx.from.id;
+
+    const links = await this.prisma.link.findMany({
+      where: {
+        userId: telegramId,
+      },
+    });
+
+    if (links.length === 0) {
+      void ctx.reply('You have no saved links.');
+
+      return;
+    }
+
+    const message = links
+      .map((link) => `${link.name}: ${link.url} (Code: ${link.code})`)
+      .join('\n');
+
+    await ctx.reply(message);
+  }
 }
