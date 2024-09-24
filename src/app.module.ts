@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TelegrafModule } from 'nestjs-telegraf';
 
+import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
-
-import { BotService } from './bot/bot.service';
+import { BotModule } from './bot/bot.module';
 
 @Module({
   imports: [
@@ -12,14 +10,7 @@ import { BotService } from './bot/bot.service';
       isGlobal: true,
     }),
     PrismaModule,
-    TelegrafModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        token: configService.get<string>('BOT_TOKEN'),
-      }),
-    }),
+    BotModule,
   ],
-  providers: [BotService],
 })
 export class AppModule {}

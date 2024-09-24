@@ -26,6 +26,9 @@
       ],
       "@interfaces/*": [
         "src/common/interfaces/*"
+      ],
+      "@guards/*": [
+        "src/common/guards/*"
       ]
     }
   }

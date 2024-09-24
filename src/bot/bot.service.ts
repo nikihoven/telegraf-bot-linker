@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import { v4 } from 'uuid';
 import {
   Command,
@@ -10,6 +11,8 @@ import {
 import { Telegraf } from 'telegraf';
 
 import { PrismaService } from '../prisma/prisma.service';
+
+import { UserExistenceGuard } from '@guards/user-existence.guard';
 
 import { MessageTransformPipe } from '@pipes/message-transform.pipe';
 
@@ -25,11 +28,13 @@ export class BotService {
   ) {}
 
   @Start()
+  @UseGuards(UserExistenceGuard)
   startCommand(ctx) {
     ctx.reply('Welcome to the bot!');
   }
 
   @Command('savelink')
+  @UseGuards(UserExistenceGuard)
   async saveLink(
     @Ctx() ctx: Context,
     @Message('text', new MessageTransformPipe())
