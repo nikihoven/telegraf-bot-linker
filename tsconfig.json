@@ -16,6 +16,17 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@pipes/*": [
+        "src/common/pipes/*"
+      ],
+      "@exceptions/*": [
+        "src/common/exceptions/*"
+      ],
+      "@interfaces/*": [
+        "src/common/interfaces/*"
+      ]
+    }
   }
 }
