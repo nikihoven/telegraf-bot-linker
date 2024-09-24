@@ -123,4 +123,26 @@ export class BotService {
 
     await ctx.reply('Link deleted.');
   }
+
+  @Command('getlink')
+  @UseGuards(UserExistenceGuard)
+  async getLink(
+    @Ctx() ctx: Context,
+    @Message('text', new OneOptionMessageTransformPipe())
+    transformedMessage: { code?: string; error?: string },
+  ) {
+    const code = transformedMessage.code;
+
+    const link = await this.prisma.link
+      .findUnique({
+        where: { code },
+      })
+      .then((data) => data);
+
+    if (!link) {
+      return ctx.reply('Link not found.');
+    }
+
+    await ctx.reply(`Here is your link: ${link.url}`);
+  }
 }
