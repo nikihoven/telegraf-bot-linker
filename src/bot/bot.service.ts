@@ -14,7 +14,10 @@ import { PrismaService } from '../prisma/prisma.service';
 
 import { UserExistenceGuard } from '@guards/user-existence.guard';
 
-import { MessageTransformPipe } from '@pipes/message-transform.pipe';
+import {
+  OneOptionMessageTransformPipe,
+  TwoOptionsMessageTransformPipe,
+} from '@pipes/message-transform.pipe';
 
 import { ChatBotException } from '@exceptions/chat-bot.exception';
 
@@ -37,7 +40,7 @@ export class BotService {
   @UseGuards(UserExistenceGuard)
   async saveLink(
     @Ctx() ctx: Context,
-    @Message('text', new MessageTransformPipe())
+    @Message('text', new TwoOptionsMessageTransformPipe())
     transformedMessage: { name?: string; url?: string; error?: string },
   ) {
     try {
@@ -89,5 +92,35 @@ export class BotService {
       .join('\n');
 
     await ctx.reply(message);
+  }
+
+  @Command('deletelink')
+  @UseGuards(UserExistenceGuard)
+  async deleteLink(
+    @Ctx() ctx: Context,
+    @Message('text', new OneOptionMessageTransformPipe())
+    transformedMessage: { code?: string; error?: string },
+  ) {
+    const code = transformedMessage.code;
+
+    const telegramId = ctx.from.id;
+
+    const link = await this.prisma.link
+      .findUnique({
+        where: { code },
+      })
+      .then((data) => data);
+
+    if (!link || Number(link.userId) !== telegramId) {
+      return ctx.reply(
+        'Link not found or you do not have permission to delete this link.',
+      );
+    }
+
+    await this.prisma.link.delete({
+      where: { code },
+    });
+
+    await ctx.reply('Link deleted.');
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
 
 @Injectable()
-export class MessageTransformPipe implements PipeTransform {
+export class TwoOptionsMessageTransformPipe implements PipeTransform {
   transform(value: any) {
     if (typeof value !== 'string') {
       return { error: 'Message must be a string' };
@@ -10,7 +10,7 @@ export class MessageTransformPipe implements PipeTransform {
     const text = value.split(' ').slice(1);
 
     if (text.length < 2) {
-      return { error: 'Usage: /savelink <name> <url>' };
+      return { error: 'No required params found' };
     }
 
     const [name, url] = text;
@@ -24,5 +24,24 @@ export class MessageTransformPipe implements PipeTransform {
 
       return { error: 'Invalid URL format' };
     }
+  }
+}
+
+@Injectable()
+export class OneOptionMessageTransformPipe implements PipeTransform {
+  transform(value: any) {
+    if (typeof value !== 'string') {
+      return { error: 'Message must be a string' };
+    }
+
+    const text = value.split(' ').slice(1);
+
+    if (text.length < 1) {
+      return { error: 'No required params found' };
+    }
+
+    const [code] = text;
+
+    return { code };
   }
 }
