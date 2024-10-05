@@ -8,6 +8,7 @@ import { BotModule } from './bot/bot.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      expandVariables: true,
     }),
     PrismaModule,
     BotModule,
